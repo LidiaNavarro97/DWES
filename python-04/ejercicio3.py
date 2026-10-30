@@ -3,7 +3,6 @@
 # acumula en un diccionario cuántas veces aparece cada palabra 
 # (ayuda: frase.split() y palabras.get(palabra, 0))
 
-TODO
 
 palabras = {}
 
