@@ -55,7 +55,7 @@ grupos = {
 # CASO 1. Calcular las medias de todas las agrupaciones
 
 # 1. Reecorre todas las modalidades y agrupaciones
-for modalidades, agrupaciones in grupos.items():
+#for modalidades, agrupaciones in grupos.items():
 
 # 2. Calcula la media de las puntuaciones de cada fase en la que haya participado la agrupacion
 def media(lista): #media de una fase
