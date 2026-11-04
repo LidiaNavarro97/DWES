@@ -1,3 +1,65 @@
+import pprint
+
+def redondear_puntuacion(puntuacion):
+    """
+    Redondear una puntuacion numerica a dos decimales
+    """
+    return round(puntuacion, 2)
+
+def calcular_media_puntuaciones(puntuaciones):
+    """
+    Calcular la media de una lista de puntuaciones.
+    """
+    puntuaciones_redondeadas = list(map(redondear_puntuacion, puntuaciones))
+    return sum(puntuaciones_redondeadas) / len(puntuaciones_redondeadas)
+
+
+def calcula_media_puntuaciones(grupos, *puntuaciones_extra, ag=None, fase=None):
+
+    if fase is not None and ag is None:
+        raise ValueError("Debes indicar una agrupacion para consultar una fase")
+
+    if puntuaciones_extra and (ag is None or fase is None):
+        raise ValueError("Las puntuaciones extra requieren agrupacion y fase")
+    
+    resultado = {}
+
+    for modalidad, agrupaciones in grupos.items():
+        #print(f"=== MODALIDAD {modalidad} ===\n")
+        for nombre, fases in agrupaciones.items():
+            if ag is not None and nombre != ag:
+                continue
+
+            if fase is None:
+                medias_fases = []
+                for nombre_fase, puntuaciones in fases.items():
+                    #print(f"=== FASE {nombre_fase} ===\n")
+                    media_fase = calcular_media_puntuaciones(puntuaciones)
+                    medias_fases.append(media_fase)
+                    #print(f"MEDIA DE LA FASE {nombre_fase}: {media_fase}")
+                media = sum(medias_fases) / len(medias_fases)
+                #print(f"MEDIA DE LAS FASES {media}")
+            else:
+                # Crear una lista nueva para no modificar la original
+                puntuaciones = fases[fase] + list(puntuaciones_extra)
+                media = calcular_media_puntuaciones(puntuaciones)    
+
+            if modalidad not in resultado:
+                resultado[modalidad] = {}
+            resultado[modalidad][nombre] = round(media, 2)
+    
+    return resultado                
+
+
+
+
+
+
+
+
+
+
+
 # diccionario de grupos
 grupos = {
     "chirigotas": {
@@ -52,31 +114,21 @@ grupos = {
     }
 }
 
-# CASO 1. Calcular las medias de todas las agrupaciones
 
-# 1. Reecorre todas las modalidades y agrupaciones
-#for modalidades, agrupaciones in grupos.items():
+# ------------------ EN CLASE ---------------------
 
-# 2. Calcula la media de las puntuaciones de cada fase en la que haya participado la agrupacion
-def media(lista): #media de una fase
-    """ suma de los elementos dividido entre cuantos hay"""
-    return sum(lista) / len(lista)
+print(" =======RESULTADOS DEL CONCURSO======= \n")
 
-def redondea(puntuacion): # lo hago para q me ayude para luego
-    """ redondea una puntuacion a dos decimales"""    
-    return round(puntuacion, 2)
 
-# media de las puntuaciones de una fase
-# extra son las notas adicionales, que sino se las doy pues salen vacias
-def media_fase(puntuaciones, extra=()): 
-    todas = list(puntuaciones) + list(extra) #las convierto en listas y las junto en una lista nueva
-    redondeadas = list(map(redondea, todas)) # aplica redondea a cada nota de todas y luego lo convierto en lista
-    return media(redondeadas) #calculo la media de las ntas ya redondeadas y lo devuelvo
+print("\nCASO A -> CALCULAR MEDIA DE LAS AGRUPACIONES\n")
+pprint.pprint(calcula_media_puntuaciones(grupos))
 
-# 3. Calcula la media general de la agrupacion a partir de las medias de sus fases
-# dando el mismo peso a cada fase
-def media_general(fases):
-    medias = []
-    for puntuaciones in fases.values():
-        medias.append(media_fase(puntuaciones))
-    return media(medias)    
+print("\nCASO B -> MEDIA GENERAL DE UNA AGRUPACION\n")
+pprint.pprint(calcula_media_puntuaciones(grupos, ag="Los Yesterday"))
+
+print("\nCASO C -> CALCULAR LA MEDIA DE UNA FASE CONCRETA\n")
+pprint.pprint(calcula_media_puntuaciones(grupos, ag="Los Yesterday", fase="final"))
+
+print("\nCASO D -> INCORPORAR PUNTUACIONES ADICIONALES MEDIANTE *ARGS \n")
+pprint.pprint(calcula_media_puntuaciones(grupos, 9.876, 9.944, ag="Los Yesterday", fase="final"))
+
