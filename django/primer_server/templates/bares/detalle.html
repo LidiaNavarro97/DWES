@@ -1,5 +1,17 @@
-<h1>Bar {{ bar.nombre }}</h1>
+{% extends "base.html" %}
 
-<p> Barrio: {{ bar.barrio }}</p>
+{% block titulo %}{{ bar.nombre }} — De tapeo por Cádiz{% endblock %}
 
-<p> Especialidad de la casa: {{ bar.especialidad }}</p>
+{% block contenido %}
+<h1>{{ bar.nombre }}</h1>
+<p>Barrio: {{ bar.barrio }}</p>
+<p>Especialidad: {{ bar.especialidad }}</p>
+<p>Precio medio: {{ bar.precio }} €</p>
+
+{% if bar.precio <= 20 %}
+    <p>Bar económico.</p>
+{% else %}
+    <p>Para darse un homenaje.</p>
+{% endif %}
+<p><a href="{% url 'listado' %}">Volver al listado</a></p>
+{% endblock %}

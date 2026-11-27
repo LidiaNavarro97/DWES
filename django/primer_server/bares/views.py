@@ -13,6 +13,9 @@ BARES = [
     
     {"id": 3, "nombre": "Bar Cañailla", "barrio": "La Viña", 
     "especialidad": "cañailla", "precio": 22},
+
+    {"id": 4, "nombre": "<b>Bar</b> Inventado", "barrio": "La Viña",
+    "especialidad": "nada", "precio": 0},
 ]
 
 

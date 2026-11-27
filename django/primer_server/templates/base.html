@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>{% block titulo %}De tapeo por Cádiz{% endblock %}</title>
+</head>
+
+<body>
+    <header>
+        <a href="{% url 'portada' %}">De tapeo por Cádiz</a> <!--tag-->
+
+        <nav>
+            <a href="{% url 'listado' %}">Bares</a> <!--tag-->
+        </nav>
+    </header>
+    
+    <main>
+    {% block contenido %}
+    {% endblock %}
+    </main>
+
+</body>
+</html>
