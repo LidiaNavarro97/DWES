@@ -5,9 +5,14 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 
 BARES = [ 
-{"id": 1, "nombre": "Casa Felipe", "barrio": "La Viña"},
-{"id": 2, "nombre": "El Faro", "barrio": "El Pópulo"},    
-{"id": 3, "nombre": "Bar Cañailla", "barrio": "La Viña"},
+    {"id": 1, "nombre": "Casa Felipe", "barrio": "La Viña", 
+    "especialidad": "tortillitas de camarones", "precio": 18},
+
+    {"id": 2, "nombre": "El Faro", "barrio": "El Pópulo", 
+    "especialidad": "choco frito", "precio": 30},
+    
+    {"id": 3, "nombre": "Bar Cañailla", "barrio": "La Viña", 
+    "especialidad": "cañailla", "precio": 22},
 ]
 
 
@@ -38,7 +43,9 @@ def portada(request):
 
 def listado(request):
     
-    return HttpResponse("Aquí irá el listado de bares.")
+    contexto = {"bares": BARES}  
+    return render(request, "bares/listado.html", contexto)
+
 
 
 def inspector(request):
@@ -69,11 +76,10 @@ def detalle(request, pk):
     
     for bar in BARES:
         if bar["id"] == pk:
-            return HttpResponse(
-                f"<h1>{bar['nombre']}</h1><p>Barrio: {bar['barrio']}</p>"
-            )
-
+            return render(request, "bares/detalle.html", {"bar": bar})
+    
     return HttpResponseNotFound("No hay ningún bar con ese identificador.")
+
 
 # Act 3 del punto 4 del temario
 # Respuesta: captura solo pk, el identificador del bar q es un numero entero
