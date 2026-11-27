@@ -10,6 +10,22 @@ BARES = [
 {"id": 3, "nombre": "Bar Cañailla", "barrio": "La Viña"},
 ]
 
+
+#Act 1 del punto 4 del temario:
+# Respuesta: aparece 127.0.0.1 porque REMOTE_ADDR es la ip de quien hace la peticion osea el cliente
+# en mi ordenador, el cliente q es el navegador y el servidor django estan en la misma maquina entonces usa la local 
+def inspector(request):
+    return HttpResponse(
+        f"method: {request.method}\n" # get o post
+        f"path:   {request.path}\n" # la ruta pedida
+        f"GET:    {dict(request.GET)}\n" # los parámetros de la URL
+        f"navegador: {request.headers.get('User-Agent', 'desconocido')}\n"
+        f"IP cliente: {request.META.get('REMOTE_ADDR', 'desconocida')}\n" # REMOTE_ADDR es la IP del cliente
+        f"Host: {request.headers.get('Host', 'desconocido')}\n", # Host es la dirección y puerto a los que se pidió la página
+        content_type="text/plain; charset=utf-8"
+    )
+
+
 # Create yout views here.
 
 def portada(request):
@@ -37,19 +53,16 @@ def inspector(request):
             
     )
 
+# Act 2 del punto 4 del temario
 def buscar(request):
     
-    valores = request.GET.getlist("q")   
-    termino = valores[0].strip() if valores else ""
-    if termino == "":   
-        return HttpResponse(      
-            "Escribe un término de búsqueda: /bares/buscar/?q=camarones"  
-        )
-        
-    aviso = ""  
-    if len(valores) > 1:     
-        aviso = "<p>El parámetro q llegó repetido; solo se atiende al primero.</p>"
-    return HttpResponse(f"{aviso}<p>Buscando «{escape(termino)}»...</p>")   
+    termino = request.GET.get("q", "").strip().casefold() # casefold pasa todo a minúsculas
+
+    if termino == "":
+        return HttpResponse("Escribe un término de búsqueda: /bares/buscar/?q=camarones")
+
+    # escape porque el dato viene del cliente y va dentro del html
+    return HttpResponse(f"Buscando «{escape(termino)}»...")  
 
 
 def detalle(request, pk):
@@ -61,3 +74,10 @@ def detalle(request, pk):
             )
 
     return HttpResponseNotFound("No hay ningún bar con ese identificador.")
+
+# Act 3 del punto 4 del temario
+# Respuesta: captura solo pk, el identificador del bar q es un numero entero
+# plato/ aporta solo direccion para q django sepa que ejecutar
+def plato(request, pk):
+    # pk llega ya como número entero porque la ruta usa <int:pk>
+    return HttpResponse(f"El plato estrella del bar {pk}")    
