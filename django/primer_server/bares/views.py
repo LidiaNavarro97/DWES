@@ -51,18 +51,6 @@ def listado(request):
 
 
 
-def inspector(request):
-    
-    return HttpResponse(
-            
-        f"method: {request.method}\n"        
-        f"path:   {request.path}\n"     
-        f"GET:    {dict(request.GET)}\n",
-                
-        content_type="text/plain; charset=utf-8",
-            
-    )
-
 # Act 2 del punto 4 del temario
 def buscar(request):
     
